@@ -1,8 +1,15 @@
 import React from 'react';
-import { Button, Image, View } from 'react-native';
-import { ImagePicker, Permissions } from 'expo';
+import { Image } from 'react-native'
+import { Text, Button, Container, Content } from 'native-base'
+import { ImagePicker, Permissions, LinearGradient } from 'expo';
+
+import styles from '../styles/HomeScreenStyles'
 
 export default class ImagePickerExample extends React.Component {
+  static navigationOptions = {
+    headerVisible: false,
+  };
+
   state = {
     image: null,
   };
@@ -10,24 +17,29 @@ export default class ImagePickerExample extends React.Component {
   async componentWillMount() {
     await Permissions.askAsync(Permissions.CAMERA);
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+    await Expo.Font.loadAsync({
+    'Roboto': require('native-base/Fonts/Roboto.ttf'),
+    'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+  });
   }
 
   render() {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Button
-          title="Pick an image from camera roll"
-          onPress={this._pickImage}
-        />
-        <Button
-          title="Take a photo"
-          onPress={this._takePhoto}
-        />
-        {image &&
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-      </View>
+      <Container>
+        <LinearGradient colors={['#659999', '#f4791f']} style={styles.container}>
+          <Button onPress={this._pickImage} style={styles.button}>
+          <Text style={styles.buttonText}>Choose an image from library</Text>
+          </Button>
+          <Button onPress={this._takePhoto} style={styles.button}>
+          <Text style={styles.buttonText}>Take a Photo</Text>
+          </Button>
+          {image &&
+            <Image source={{ uri: image }} style={styles.imgPreview} />}
+        </LinearGradient>
+      </Container>
     );
   }
 
