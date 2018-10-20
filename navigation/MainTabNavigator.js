@@ -26,6 +26,7 @@ HomeStack.navigationOptions = {
     />
   ),
   tabBarOptions: {
+    inactiveTintColor: '#ffffff',
     style: {
       backgroundColor: '#f4791f'
     }
@@ -47,6 +48,7 @@ LinksStack.navigationOptions = {
     />
   ),
   tabBarOptions: {
+    inactiveTintColor: '#ffffff',
     style: {
       backgroundColor: '#f4791f'
     }
@@ -68,6 +70,7 @@ SettingsStack.navigationOptions = {
     />
   ),
   tabBarOptions: {
+    inactiveTintColor: '#ffffff',
     style: {
       backgroundColor: '#f4791f'
     }
