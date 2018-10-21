@@ -9,7 +9,7 @@ export default StyleSheet.create({
   button: {
     justifyContent: 'center',
     alignSelf: 'center',
-    marginBottom: 15,
+    marginBottom: 30,
     position: 'relative',
     backgroundColor: 'rgba(52, 52, 52, 0.3)',
   },

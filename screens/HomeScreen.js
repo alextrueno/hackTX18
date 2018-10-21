@@ -44,10 +44,7 @@ export default class ImagePickerExample extends React.Component {
   }
 
   _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
+    let result = await ImagePicker.launchImageLibraryAsync();
 
     console.log(result);
 
@@ -57,9 +54,7 @@ export default class ImagePickerExample extends React.Component {
   };
 
   _takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-    });
+    let result = await ImagePicker.launchCameraAsync();
 
     console.log(result);
 
