@@ -1,14 +1,44 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Text, Button, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { AppLoading, Asset, Font, Icon } from 'expo';
+import { Stitch, AnonymousCredential } from 'mongodb-stitch-react-native-sdk';
 import AppNavigator from './navigation/AppNavigator';
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state={
+      currentUserId: undefined,
+      client: undefined
+    };
+    this._loadClient = this._loadClient.bind(this);
+    this._onPressLogin = this._onPressLogin.bind(this);
+    this._onPressLogout = this._onPressLogout.bind(this);
+  }
+
+  componentDidMount() {
+    this._loadClient();
+  }
+
   state = {
     isLoadingComplete: false,
   };
 
   render() {
+    let loginStatus = "Currently logged out."
+
+    if(this.state.currentUserId) {
+      loginStatus = `Currently logged in as ${this.state.currentUserId}!`
+    }
+
+    loginButton = <Button
+                    onPress={this._onPressLogin}
+                    title="Login"/>
+
+    logoutButton = <Button
+                    onPress={this._onPressLogout}
+                    title="Logout"/>
+
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -21,6 +51,8 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <Text> {loginStatus} </Text>
+          {this.state.currentUserId !== undefined ? logoutButton : loginButton}
           <AppNavigator />
         </View>
       );
@@ -54,6 +86,36 @@ export default class App extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
+
+  _loadClient() {
+    Stitch.initializeDefaultAppClient('alliancesystemsstitch-xkzjw').then(client => {
+      this.setState({ client });
+
+      if(client.auth.isLoggedIn) {
+        this.setState({ currentUserId: client.auth.user.id })
+      }
+    });
+  }
+
+  _onPressLogin() {
+    this.state.client.auth.loginWithCredential(new AnonymousCredential()).then(user => {
+        console.log(`Successfully logged in as user ${user.id}`);
+        this.setState({ currentUserId: user.id })
+    }).catch(err => {
+        console.log(`Failed to log in anonymously: ${err}`);
+        this.setState({ currentUserId: undefined })
+    });
+  }
+
+  _onPressLogout() {
+    this.state.client.auth.logout().then(user => {
+        console.log(`Successfully logged out`);
+        this.setState({ currentUserId: undefined })
+    }).catch(err => {
+        console.log(`Failed to log out: ${err}`);
+        this.setState({ currentUserId: undefined })
+    });
+  }
 }
 
 const styles = StyleSheet.create({
