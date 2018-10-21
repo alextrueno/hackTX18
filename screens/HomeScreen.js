@@ -15,9 +15,11 @@ export default class ImagePickerExample extends React.Component {
   };
 
   async componentWillMount() {
+    // Permissions for accessing photo library and camera
     await Permissions.askAsync(Permissions.CAMERA);
     await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
+    // Load fonts required by Expo
     await Expo.Font.loadAsync({
     'Roboto': require('native-base/Fonts/Roboto.ttf'),
     'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
@@ -26,7 +28,6 @@ export default class ImagePickerExample extends React.Component {
 
   render() {
     let { image } = this.state;
-
     return (
       <Container>
         <LinearGradient colors={['#659999', '#f4791f']} style={styles.container}>
@@ -62,4 +63,52 @@ export default class ImagePickerExample extends React.Component {
       this.setState({ image: result.uri });
     }
   }
+/*
+  readOcrImage(sourceImageUrl, responseTextArea) {
+    // Request parameters.
+    var params = {
+        "language": "unk",
+        "detectOrientation ": "true",
+    };
+
+    // Perform the REST API call.
+    $.ajax({
+        url: common.uriBasePreRegion +
+             $("#subscriptionRegionSelect").val() +
+             common.uriBasePostRegion +
+             common.uriBaseOcr +
+             "?" +
+             $.param(params),
+
+        // Request headers.
+        beforeSend: function(jqXHR){
+            jqXHR.setRequestHeader("Content-Type","application/json");
+            jqXHR.setRequestHeader("Ocp-Apim-Subscription-Key",
+                encodeURIComponent($("#subscriptionKeyInput").val()));
+        },
+
+        type: "POST",
+
+        // Request body.
+        data: '{"url": ' + '"' + sourceImageUrl + '"}',
+    })
+
+    .done(function(data) {
+        // Show formatted JSON on webpage.
+        responseTextArea.val(JSON.stringify(data, null, 2));
+    })
+
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        // Put the JSON description into the text area.
+        responseTextArea.val(JSON.stringify(jqXHR, null, 2));
+
+        // Display error message.
+        var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+        errorString += (jqXHR.responseText === "") ? "" : (jQuery.parseJSON(jqXHR.responseText).message) ?
+            jQuery.parseJSON(jqXHR.responseText).message : jQuery.parseJSON(jqXHR.responseText).error.message;
+        alert(errorString);
+    });
+  }
+}
+*/
 }
